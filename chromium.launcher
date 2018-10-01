@@ -1,0 +1,38 @@
+#! /bin/sh
+
+# get the IP from setting
+IP="$(snapctl get serverip)"
+
+# if the IP is not set, try to get it from avahi
+[ -n "$IP" ] || IP="$(LC_ALL=C avahi-resolve-host-name dashkiosk.local 2>/dev/null| sed 's/^.*\s//')"
+[ -n "$IP" ] && URL="http://${IP}/receiver"
+
+# fall back to hardcoded url if both of the above didnt work
+[ -n "$IP" ] || URL="http://dashkiosk.local/receiver"
+
+start_chromium () {
+    $SNAP/usr/lib/chromium-browser/chromium-browser \
+        --no-default-browser-check \
+        --no-first-run \
+        --noerrdialogs \
+        --disable-restore-session-state \
+        --disable-infobars \
+        --disable-java \
+        --disable-translate \
+        --disable-suggestions-service \
+        --disable-save-password-bubble \
+        --autoplay-policy=no-user-gesture-required \
+        --no-sandbox \
+        --disable-gpu-sandbox \
+        --dbus-stub \
+        --enable-logging=stderr \
+        --ignore-gpu-blacklist \
+        --enable-native-gpu-memory-buffers \
+        --kiosk \
+        $1
+}
+
+# first spawning a headles window helps against breaking out of kiosk mode
+# and suppresses any non-disabled startup dialogs additionally
+start_chromium --no-startup-window
+start_chromium $URL

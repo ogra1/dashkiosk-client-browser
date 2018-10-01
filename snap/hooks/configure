@@ -1,0 +1,9 @@
+#! /bin/sh
+
+IP="$(snapctl get serverip)"
+
+if [ -n "$IP" ]; then
+    echo "setting Server IP to $IP"
+else
+    echo "no IP set"
+fi
