@@ -110,7 +110,9 @@ fi
 SNAPPY_PRELOAD=$SNAP \
 LD_PRELOAD=$SNAP/lib/libxwayland-preload.so \
   $SNAP/usr/bin/Xwayland -nocursor -terminate :${port} &
-[ "$?" = "0" ] || exit 1
+XWPID=$!
+echo "Xwayland PID: $XWPID"
+sleep 1 && kill -0 $XWPID
 
 trap "trap - SIGTERM EXIT && kill -- -$$" SIGINT SIGTERM SIGQUIT EXIT # kill on signal or quit
 sleep 1 # FIXME - Xwayland does emit SIGUSR1 when ready for client connections
@@ -122,7 +124,10 @@ export CLUTTER_BACKEND="x11"
 export QT_QPA_PLATFORM="xcb"
 
 $SNAP/usr/bin/i3 -c "$I3_CONFIG" &
-[ "$?" = "0" ] || exit 1
+I3PID=$!
+echo "I3 PID: $I3PID"
+sleep 1 && kill -0 $I3PID
+
 
 # Launch the X11 process passed in
 "$@"
