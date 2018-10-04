@@ -10,11 +10,11 @@ confinement: strict
 
 apps:
   dashkiosk-browser:
-    command: desktop-launch xwayland-dashkiosk-launch chromium.launcher
+    command: wrapper.sh
     daemon: simple
     desktop: usr/share/applications/chromium-browser.desktop
     environment:
-      CHROME_DESKTOP: chromium.desktop
+      CHROME_DESKTOP: chromium-browser.desktop
       XWAYLAND_I3_CONFIG_FILE: $SNAP/i3.config
     slots: [ x11 ]
     plugs:
@@ -49,6 +49,7 @@ parts:
     override-build: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -av chromium.launcher $SNAPCRAFT_PART_INSTALL/bin/
+      cp -av wrapper.sh $SNAPCRAFT_PART_INSTALL/bin/
       cp -av xwayland-dashkiosk-launch $SNAPCRAFT_PART_INSTALL/bin/
       cp -av i3.config $SNAPCRAFT_PART_INSTALL/
     after: [desktop-gtk3, xwayland-kiosk-helper]

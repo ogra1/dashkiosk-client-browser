@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 # Create $XDG_RUNTIME_DIR if not exists (to be removed when LP: #1738197 is fixed)
 [ -n "$XDG_RUNTIME_DIR" ] && mkdir -p $XDG_RUNTIME_DIR -m 700
