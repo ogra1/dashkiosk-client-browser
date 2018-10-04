@@ -112,9 +112,10 @@ LD_PRELOAD=$SNAP/lib/libxwayland-preload.so \
   $SNAP/usr/bin/Xwayland -nocursor -terminate :${port} &
 XWPID=$!
 echo "Xwayland PID: $XWPID"
-sleep 1
+sleep 3
 if ! kill -0 $XWPID; then
     echo "Xwayland not running, exiting !"
+    exit 1
 fi
 
 trap "trap - SIGTERM EXIT && kill -- -$$" SIGINT SIGTERM SIGQUIT EXIT # kill on signal or quit
@@ -129,9 +130,10 @@ export QT_QPA_PLATFORM="xcb"
 $SNAP/usr/bin/i3 -c "$I3_CONFIG" &
 I3PID=$!
 echo "I3 PID: $I3PID"
-sleep 1
+sleep 3
 if ! kill -0 $I3PID; then
     echo "i3 not running, exiting !"
+    exit 1
 fi
 
 # Launch the X11 process passed in
