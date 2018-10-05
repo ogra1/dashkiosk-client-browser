@@ -10,7 +10,7 @@ confinement: strict
 
 apps:
   dashkiosk-browser:
-    command: wrapper.sh
+    command: desktop-launch xwayland-dashkiosk-launch chromium.launcher
     daemon: simple
     desktop: usr/share/applications/chromium-browser.desktop
     environment:

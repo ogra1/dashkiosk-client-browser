@@ -1,9 +1,9 @@
 #! /bin/sh
 
-IP="$(snapctl get serverip)"
+URL="$(snapctl get url)"
 
-if [ -n "$IP" ]; then
-    echo "setting Server IP to $IP"
+if [ -n "$URL" ]; then
+    echo "setting Server URL to $URL"
 else
-    echo "no IP set"
+    echo "no URL set"
 fi

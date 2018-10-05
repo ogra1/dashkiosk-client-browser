@@ -1,14 +1,16 @@
 #! /bin/sh
 
-# get the IP from setting
-IP="$(snapctl get serverip)"
+set -e
 
-# if the IP is not set, try to get it from avahi
-[ -n "$IP" ] || IP="$(LC_ALL=C avahi-resolve-host-name dashkiosk.local 2>/dev/null| sed 's/^.*\s//')"
-[ -n "$IP" ] && URL="http://${IP}/receiver"
+# get the IP from setting
+URL="$(snapctl get url)"
+
+# if url is not set, try crafting one from an avahi lookup
+[ -n "$URL" ] || URL="http://$(LC_ALL=C avahi-resolve-host-name dashkiosk.local 2>/dev/null| sed 's/^.*\s//')/receiver"
 
 # fall back to hardcoded url if both of the above didnt work
-[ -n "$IP" ] || URL="http://dashkiosk.local/receiver"
+# point to the configuration website to set up wlan
+[ -n "$URL" ] || URL="http://localhost:8081/"
 
 start_chromium () {
     $SNAP/usr/lib/chromium-browser/chromium-browser \
@@ -33,6 +35,6 @@ start_chromium () {
 }
 
 # first spawning a headles window helps against breaking out of kiosk mode
-# and suppresses any non-disabled startup dialogs additionally
+# and suppresses any non-disabled startup dialogs
 start_chromium --no-startup-window
 start_chromium $URL
