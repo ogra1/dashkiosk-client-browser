@@ -107,18 +107,11 @@ else
 fi
 
 # Launch Xwayland.
-SNAPPY_PRELOAD=$SNAP \
+(SNAPPY_PRELOAD=$SNAP \
 LD_PRELOAD=$SNAP/lib/libxwayland-preload.so \
-  $SNAP/usr/bin/Xwayland -nocursor -terminate :${port} &
-XWPID=$!
-echo "Xwayland PID: $XWPID"
-sleep 3
-if ! kill -0 $XWPID; then
-    echo "Xwayland not running, exiting !"
-    exit 1
-fi
+  $SNAP/usr/bin/Xwayland -nocursor -terminate :${port}; echo $?) &
 
-trap "trap - SIGTERM EXIT && kill -- -$$" SIGINT SIGTERM SIGQUIT EXIT # kill on signal or quit
+trap "trap - SIGTERM EXIT && exit 1" SIGINT SIGTERM SIGQUIT EXIT # kill on signal or quit
 sleep 1 # FIXME - Xwayland does emit SIGUSR1 when ready for client connections
 
 # Set the X environment
@@ -127,14 +120,8 @@ export GDK_BACKEND="x11"
 export CLUTTER_BACKEND="x11"
 export QT_QPA_PLATFORM="xcb"
 
-$SNAP/usr/bin/i3 -c "$I3_CONFIG" &
-I3PID=$!
-echo "I3 PID: $I3PID"
-sleep 3
-if ! kill -0 $I3PID; then
-    echo "i3 not running, exiting !"
-    exit 1
-fi
+($SNAP/usr/bin/i3 -c "$I3_CONFIG"; echo $?) &
 
 # Launch the X11 process passed in
 "$@"
+
