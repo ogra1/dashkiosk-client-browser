@@ -28,6 +28,7 @@ apps:
       - network-manager
       - opengl
       - password-manager-service
+      - process-control
       - pulseaudio
       - removable-media
       - screen-inhibit-control
