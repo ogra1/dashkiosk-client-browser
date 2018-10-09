@@ -44,9 +44,10 @@ parts:
     source: .
     plugin: nil
     stage-packages:
+      - avahi-utils
       - chromium-browser
       - chromium-codecs-ffmpeg-extra
-      - avahi-utils
+      - libdb5.3
     override-build: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -av chromium.launcher $SNAPCRAFT_PART_INSTALL/bin/
