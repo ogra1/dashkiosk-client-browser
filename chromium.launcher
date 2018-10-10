@@ -12,6 +12,8 @@ URL="$(snapctl get url)"
 # point to the configuration website to set up wlan
 [ -n "$URL" ] || URL="http://localhost:8081/"
 
+rm -rf $SNAP_USER_DATA/.config/chromium/Singleton* || true
+
 start_chromium () {
     $SNAP/usr/lib/chromium-browser/chromium-browser \
         --no-default-browser-check \
